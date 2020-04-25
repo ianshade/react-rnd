@@ -137,8 +137,8 @@ test("should call onDrag when dragging", async (t) => {
   rnd.find("div").at(0).simulate("mousedown", { clientX: 0, clientY: 0 });
   mouseMove(200, 220);
   t.is(onDrag.callCount, 1);
-  t.is(onDrag.firstCall.args[1].x, 500);
-  t.is(onDrag.firstCall.args[1].y, 520);
+  t.is(onDrag.firstCall.args[1].x, 300);
+  t.is(onDrag.firstCall.args[1].y, 320);
   t.not((rnd.getDOMNode().getAttribute("style") || "").indexOf("transform: translate(400px, 420px)"), -1);
 });
 
@@ -184,6 +184,18 @@ test("xdragging only y when axis equals y", async (t) => {
   mouseMove(200, 220);
   t.is(onDrag.callCount, 1);
   t.not((rnd.getDOMNode().getAttribute("style") || "").indexOf("transform: translate(100px, 320px)"), -1);
+});
+
+test("dragging with offset", async (t) => {
+  const onDrag = spy();
+  const rnd = mount(<div style={{margin: '100px 60px'}}><Rnd id='rnd' onDrag={onDrag} default={{ x: 100, y: 100, width: 100, height: 100 }} /></div>, {
+    attachTo: document.querySelector("div"),
+  });
+  rnd.find("#rnd").at(0).simulate("mousedown", { clientX: 0, clientY: 0 });
+  mouseMove(200, 220);
+  t.is(onDrag.callCount, 1);
+  t.is(onDrag.firstCall.args[1].x, 300)
+  t.is(onDrag.firstCall.args[1].y, 320)
 });
 
 test("should enable dragging both x & y when axis equals both", async (t) => {
